@@ -1,0 +1,127 @@
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
+import Onboarding from './pages/Onboarding';
+import CampaignDetails from './pages/CampaignDetails';
+import Logo from './components/Logo';
+
+// Simple nav wrapper for logged-in users
+const AppLayout = ({ children }) => {
+  const { logout, user } = useAuth();
+  
+  return (
+    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col transition-colors duration-300">
+      <nav className="bg-[var(--card-bg)] border-b border-[var(--card-border)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center gap-3">
+              <Logo className="h-12" textColor="text-[var(--color-text)]" />
+              <span className="text-lg text-[var(--color-text-muted)] font-medium border-l border-[var(--card-border)] pl-3 mt-1 tracking-tight">
+                Partner Hub
+              </span>
+            </div>
+            {user && (
+              <div className="flex items-center gap-6">
+                <a 
+                  href="https://www.mojipass.com/resources" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-sm text-[var(--color-brand)] hover:brightness-110 font-bold flex items-center gap-1.5"
+                >
+                  <span className="text-base">🎓</span>
+                  Learn
+                </a>
+                <span className="text-sm text-[var(--color-text-muted)]">{user.email}</span>
+                <button 
+                  onClick={() => logout()}
+                  className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] font-medium transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
+    </div>
+  );
+};
+
+// Route protection logic
+const ProtectedRoute = ({ children }) => {
+  const { user, loading, partnerData } = useAuth();
+  
+  if (loading) return <div className="p-8 text-center text-gray-500">Loading your session...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  
+  // If they are logged in but haven't finished onboarding, force them to onboarding
+  if (partnerData && !partnerData.onboardingComplete && window.location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  return children;
+};
+
+// Redirect logged-in users away from auth pages
+const AuthRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) return null;
+  if (user) return <Navigate to="/dashboard" replace />;
+  
+  return children;
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Auth Routes */}
+          <Route path="/login" element={
+            <AuthRoute>
+              <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <Login />
+              </div>
+            </AuthRoute>
+          } />
+          <Route path="/signup" element={
+            <AuthRoute>
+              <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <Signup />
+              </div>
+            </AuthRoute>
+          } />
+          
+          {/* Protected Area */}
+          <Route path="/onboarding" element={
+            <ProtectedRoute>
+              <AppLayout><Onboarding /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <AppLayout><Dashboard /></AppLayout>
+            </ProtectedRoute>
+          } />
+          <Route path="/campaign/:id" element={
+            <ProtectedRoute>
+              <AppLayout><CampaignDetails /></AppLayout>
+            </ProtectedRoute>
+          } />
+
+          {/* Root Redirects */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/partners" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;
