@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    allowedHosts: ['partners.mojipass.com']
+  },
+  preview: {
+    allowedHosts: ['partners.mojipass.com']
+  },
   test: {
     globals: true,
     environment: 'jsdom',
