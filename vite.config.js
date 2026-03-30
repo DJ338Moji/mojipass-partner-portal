@@ -9,10 +9,10 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    allowedHosts: ['partners.mojipass.com']
+    allowedHosts: ['partner.mojipass.com']
   },
   preview: {
-    allowedHosts: ['partners.mojipass.com']
+    allowedHosts: ['partner.mojipass.com']
   },
   test: {
     globals: true,
