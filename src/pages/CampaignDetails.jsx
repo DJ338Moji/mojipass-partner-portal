@@ -18,7 +18,7 @@ export default function CampaignDetails() {
       try {
         const docRef = doc(db, 'campaigns', id);
         const docSnap = await getDoc(docRef);
-        
+
         if (docSnap.exists()) {
           setCampaign({ id: docSnap.id, ...docSnap.data() });
         }
@@ -39,7 +39,7 @@ export default function CampaignDetails() {
     // Local dev fallback URL for testing:
     const baseUrl = import.meta.env.DEV ? 'http://localhost:3000' : 'https://api.mojipass.com';
     const trackingUrl = `${baseUrl}/api/v1/redirect?campaignId=${campaign.id}&partnerId=${user.uid}`;
-    
+
     setGeneratedLink(trackingUrl);
   };
 
@@ -49,12 +49,14 @@ export default function CampaignDetails() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  if (loading) {
     return (
       <div className="py-20 text-center text-[var(--color-text-muted)]">
         <div className="animate-spin w-8 h-8 border-4 border-[var(--color-brand)] border-t-transparent rounded-full mx-auto mb-4"></div>
         Loading campaign details...
       </div>
     );
+  }
 
   if (!campaign) {
     return (
@@ -76,7 +78,7 @@ export default function CampaignDetails() {
 
       <div className="bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--card-border)] overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[var(--color-brand)] to-[var(--color-accent)] opacity-80"></div>
-        
+
         <div className="p-8 md:p-10">
           <div className="flex flex-col md:flex-row gap-8 items-start justify-between mb-8">
             <div>
@@ -95,10 +97,10 @@ export default function CampaignDetails() {
                 Sponsored by <span className="text-[var(--color-text)] font-bold">{campaign.brandName || "Premium Brand"}</span>
               </p>
             </div>
-            
+
             <div className="w-full md:w-auto bg-[var(--color-bg)] rounded-xl p-6 border border-[var(--card-border)] flex-shrink-0 text-center">
-               <p className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Total Pool</p>
-               <p className="text-3xl font-black text-[var(--color-text)]">${campaign.sponsorBudget?.toLocaleString() || "0"}</p>
+              <p className="text-sm font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Total Pool</p>
+              <p className="text-3xl font-black text-[var(--color-text)]">${campaign.sponsorBudget?.toLocaleString() || "0"}</p>
             </div>
           </div>
 
@@ -130,7 +132,7 @@ export default function CampaignDetails() {
                 <h3 className="text-xl font-bold text-[var(--color-text)] mb-2">Ready to promote this campaign?</h3>
                 <p className="text-[var(--color-text-muted)]">Generate your unique tracking link below. Any trials registered through this link will be securely attributed to your partner account.</p>
               </div>
-              
+
               {!generatedLink ? (
                 <button
                   onClick={handleGenerateLink}
@@ -142,13 +144,13 @@ export default function CampaignDetails() {
               ) : (
                 <div className="w-full md:w-auto flex-shrink-0">
                   <div className="bg-[var(--card-bg)] px-4 py-3 rounded-lg border border-[var(--card-border)] flex items-center shadow-inner">
-                    <input 
-                      type="text" 
-                      readOnly 
+                    <input
+                      type="text"
+                      readOnly
                       value={generatedLink}
                       className="bg-transparent border-none outline-none text-[var(--color-text-muted)] text-sm font-mono w-full md:w-64 truncate"
                     />
-                    <button 
+                    <button
                       onClick={copyToClipboard}
                       className="ml-3 p-2 text-gray-400 hover:text-emerald-600 rounded-md hover:bg-emerald-50 transition-colors"
                       title="Copy to clipboard"
@@ -161,7 +163,7 @@ export default function CampaignDetails() {
               )}
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>
