@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../services/firebase';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signOut 
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
@@ -20,13 +20,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userAuth) => {
       setUser(userAuth);
-      
+
       if (userAuth) {
         try {
           // Fetch additional partner data from Firestore
           const docRef = doc(db, 'partners', userAuth.uid);
           const docSnap = await getDoc(docRef);
-          
+
           if (docSnap.exists()) {
             setPartnerData(docSnap.data());
           } else {
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setPartnerData(null);
       }
-      
+
       setLoading(false);
     });
 
@@ -65,12 +65,17 @@ export const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const resetPassword = (email) => {
+    return sendPasswordResetEmail(auth, email);
+  };
+
   const value = {
     user,
     partnerData,
     login,
     signup,
     logout,
+    resetPassword,
     loading
   };
 

@@ -36,11 +36,11 @@ export default function Signup() {
           Partner Network Signup
         </h2>
       </div>
-      
+
       <div className="bg-[var(--card-bg)] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-[var(--card-border)]">
         <form className="space-y-6" onSubmit={handleSubmit}>
           {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
-          
+
           <div>
             <label className="block text-sm font-medium text-[var(--color-text-muted)]">Full Name / Creator Name</label>
             <div className="mt-1">
@@ -98,6 +98,10 @@ export default function Signup() {
               Sign in
             </Link>
           </p>
+        </div>
+        <div className="mt-8 flex justify-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-text-muted)] opactiy-50">
+          <Link to="/privacy" className="hover:text-[var(--color-brand)] transition-colors">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-[var(--color-brand)] transition-colors">Terms of Service</Link>
         </div>
       </div>
     </div>

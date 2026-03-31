@@ -8,8 +8,28 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const [showReset, setShowReset] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
+  const { login, resetPassword } = useAuth();
   const navigate = useNavigate();
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError('');
+    setResetMessage('');
+    if (!email) {
+      return setError('Please enter your email address first.');
+    }
+    setLoading(true);
+    try {
+      await resetPassword(email);
+      setResetMessage('Check your inbox for further instructions');
+    } catch (err) {
+      setError('Failed to reset password: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,59 +51,115 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center mb-8 gap-4">
         <Logo className="h-16" textColor="text-[var(--color-text)]" />
         <h2 className="text-center text-xl font-bold text-[var(--color-text-muted)]">
-          Sign in to Partner Hub
+          {showReset ? 'Reset Your Password' : 'Sign in to Partner Hub'}
         </h2>
       </div>
-      
+
       <div className="bg-[var(--card-bg)] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-[var(--card-border)]">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
-          
-          <div>
-            <label className="block text-sm font-medium text-[var(--color-text-muted)]">Email address</label>
-            <div className="mt-1">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
-              />
+        {showReset ? (
+          <form className="space-y-6" onSubmit={handleResetPassword}>
+            {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
+            {resetMessage && <div className="p-3 bg-green-100 text-green-700 rounded-md text-sm">{resetMessage}</div>}
+
+            <div>
+              <label className="block text-sm font-medium text-[var(--color-text-muted)]">Email address</label>
+              <div className="mt-1">
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-sm font-medium text-[var(--color-text-muted)]">Password</label>
-            <div className="mt-1">
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
-              />
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--color-brand)] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-brand)] transition-all"
+              >
+                {loading ? 'Sending...' : 'Send Reset Link'}
+              </button>
             </div>
-          </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--color-brand)] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-brand)] transition-all"
-            >
-              Sign in
-            </button>
-          </div>
-        </form>
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setShowReset(false)}
+                className="text-sm font-medium text-[var(--color-brand)] hover:brightness-110"
+              >
+                Back to Sign in
+              </button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
 
-        <div className="mt-6 text-center">
-          <p className="text-sm text-[var(--color-text-muted)]">
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-[var(--color-brand)] hover:brightness-110">
-              Apply to join the network
-            </Link>
-          </p>
-        </div>
+              <div>
+                <label className="block text-sm font-medium text-[var(--color-text-muted)]">Email address</label>
+                <div className="mt-1">
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between">
+                  <label className="block text-sm font-medium text-[var(--color-text-muted)]">Password</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowReset(true)}
+                    className="text-xs font-medium text-[var(--color-brand)] hover:brightness-110"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+                <div className="mt-1">
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--color-brand)] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-brand)] transition-all"
+                >
+                  Sign in
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-[var(--color-text-muted)]">
+                Don't have an account?{' '}
+                <Link to="/signup" className="font-medium text-[var(--color-brand)] hover:brightness-110">
+                  Apply to join the network
+                </Link>
+              </p>
+            </div>
+            <div className="mt-8 flex justify-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-text-muted)] opactiy-50">
+              <Link to="/privacy" className="hover:text-[var(--color-brand)] transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-[var(--color-brand)] transition-colors">Terms of Service</Link>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
