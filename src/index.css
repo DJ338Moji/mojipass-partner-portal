@@ -3,31 +3,46 @@
 @layer base {
   :root {
     /* Default: Influencer Theme (V1) */
-    --color-brand: #10b981; /* Emerald 500 */
-    --color-brand-hover: #34d399; /* Emerald 400 */
-    --color-accent: #06b6d4; /* Cyan 500 */
-    --color-bg: #0f172a; /* Slate 900 */
-    --color-text: #f8fafc; /* Slate 50 */
-    --color-text-muted: #94a3b8; /* Slate 400 */
+    --color-brand: #10b981;
+    /* Emerald 500 */
+    --color-brand-hover: #34d399;
+    /* Emerald 400 */
+    --color-accent: #06b6d4;
+    /* Cyan 500 */
+    --color-bg: #0f172a;
+    /* Slate 900 */
+    --color-text: #f8fafc;
+    /* Slate 50 */
+    --color-text-muted: #94a3b8;
+    /* Slate 400 */
     --glow-opacity: 0.15;
     --glow-blur: 120px;
-    --card-bg: #1e293b; /* Slate 800 */
+    --card-bg: #1e293b;
+    /* Slate 800 */
     --card-border: rgba(255, 255, 255, 0.1);
     --font-main: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   }
 
   [data-theme='enterprise'] {
     /* Enterprise Theme (V2) */
-    --color-brand: #1e3a8a; /* Deep Navy 900 */
-    --color-brand-hover: #1e40af; /* Deep Navy 800 */
-    --color-accent: #3b82f6; /* Blue 500 */
-    --color-bg: #f8fafc; /* Slate 50 */
-    --color-text: #0f172a; /* Slate 900 */
-    --color-text-muted: #475569; /* Slate 600 */
+    --color-brand: #1e3a8a;
+    /* Deep Navy 900 */
+    --color-brand-hover: #1e40af;
+    /* Deep Navy 800 */
+    --color-accent: #3b82f6;
+    /* Blue 500 */
+    --color-bg: #f8fafc;
+    /* Slate 50 */
+    --color-text: #0f172a;
+    /* Slate 900 */
+    --color-text-muted: #475569;
+    /* Slate 600 */
     --glow-opacity: 0.05;
     --glow-blur: 40px;
-    --card-bg: #ffffff; /* White */
-    --card-border: #e2e8f0; /* Slate 200 */
+    --card-bg: #ffffff;
+    /* White */
+    --card-border: #e2e8f0;
+    /* Slate 200 */
   }
 
   body {
@@ -35,5 +50,15 @@
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-main);
+  }
+
+  /* Autofill styling: prevent white-out in dark mode */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #0B0B0F inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
   }
 }

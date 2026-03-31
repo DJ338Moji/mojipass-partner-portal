@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import Logo from '../components/Logo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -47,119 +46,139 @@ export default function Login() {
   };
 
   return (
-    <div className="sm:mx-auto sm:w-full sm:max-w-md">
-      <div className="flex flex-col items-center justify-center mb-8 gap-4">
-        <Logo className="h-16" textColor="text-[var(--color-text)]" />
-        <h2 className="text-center text-xl font-bold text-[var(--color-text-muted)]">
-          {showReset ? 'Reset Your Password' : 'Sign in to Partner Hub'}
-        </h2>
-      </div>
+    <div className="min-h-screen bg-[#0B0B0F] flex items-center justify-center py-12 px-4 selection:bg-emerald-500/30 font-sans">
+      <div className="max-w-md w-full">
 
-      <div className="bg-[var(--card-bg)] py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-[var(--card-border)]">
-        {showReset ? (
-          <form className="space-y-6" onSubmit={handleResetPassword}>
-            {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
-            {resetMessage && <div className="p-3 bg-green-100 text-green-700 rounded-md text-sm">{resetMessage}</div>}
+        {/* Logo/Brand */}
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 mx-auto mb-6 drop-shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all hover:scale-105 flex items-center justify-center">
+            <img src="/mojipass-logo.png" alt="Mojipass Logo" className="w-full h-full object-contain" onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.parentElement.innerHTML = '<div class="w-20 h-20 bg-emerald-500 rounded-2xl flex items-center justify-center text-white font-black text-3xl shadow-lg">M</div>';
+            }} />
+          </div>
+          <h1 className="text-5xl font-black text-white tracking-tighter mb-2 italic">
+            MOJI<span className="text-emerald-400">PASS</span>®
+          </h1>
+          <p className="text-gray-500 font-bold tracking-[0.2em] uppercase text-[10px]">Partner Network Hub</p>
+        </div>
 
-            <div>
-              <label className="block text-sm font-medium text-[var(--color-text-muted)]">Email address</label>
-              <div className="mt-1">
+        {/* Auth Card */}
+        <div className="bg-[#16161D]/80 backdrop-blur-3xl border border-white/10 rounded-[2rem] shadow-2xl p-10 relative overflow-hidden group">
+          {/* Subtle Glow Background Effect */}
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-[80px] group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">
+            {showReset ? 'Reset Password' : 'Sign In'}
+          </h2>
+
+          {showReset ? (
+            <form onSubmit={handleResetPassword} className="space-y-6">
+              <p className="text-gray-400 text-sm text-center mb-4">
+                Enter your email address and we'll send you a link to reset your password.
+              </p>
+              {error && <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-sm text-center">{error}</div>}
+              {resetMessage && <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl text-sm text-center">📧 {resetMessage}</div>}
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                  className="w-full px-5 py-4 bg-[#0B0B0F] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-gray-700"
+                  placeholder="you@example.com"
                 />
               </div>
-            </div>
-
-            <div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--color-brand)] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-brand)] transition-all"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 text-black py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest transition-all transform active:scale-[0.98] disabled:bg-gray-800 disabled:text-gray-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]"
               >
-                {loading ? 'Sending...' : 'Send Reset Link'}
+                {loading ? 'Processing...' : 'Send Reset Link'}
               </button>
-            </div>
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => setShowReset(false)}
+                  className="text-emerald-400/60 hover:text-emerald-400 font-bold text-xs uppercase tracking-widest transition-all"
+                >
+                  Back to Login
+                </button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {error && <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl text-sm text-center">{error}</div>}
 
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => setShowReset(false)}
-                className="text-sm font-medium text-[var(--color-brand)] hover:brightness-110"
-              >
-                Back to Sign in
-              </button>
-            </div>
-          </form>
-        ) : (
-          <>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {error && <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">{error}</div>}
-
-              <div>
-                <label className="block text-sm font-medium text-[var(--color-text-muted)]">Email address</label>
-                <div className="mt-1">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                    className="w-full px-5 py-4 bg-[#0B0B0F] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-gray-700"
+                    placeholder="you@example.com"
                   />
                 </div>
-              </div>
 
-              <div>
-                <div className="flex justify-between">
-                  <label className="block text-sm font-medium text-[var(--color-text-muted)]">Password</label>
-                  <button
-                    type="button"
-                    onClick={() => setShowReset(true)}
-                    className="text-xs font-medium text-[var(--color-brand)] hover:brightness-110"
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
-                <div className="mt-1">
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">
+                      Password
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowReset(true)}
+                      className="text-emerald-400/60 hover:text-emerald-400 font-bold text-[10px] uppercase tracking-widest transition-all"
+                    >
+                      Forgot?
+                    </button>
+                  </div>
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
+                    className="w-full px-5 py-4 bg-[#0B0B0F] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-gray-700"
+                    placeholder="••••••••"
+                    minLength="6"
                   />
                 </div>
-              </div>
 
-              <div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--color-brand)] hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-brand)] transition-all"
+                  className="w-full bg-emerald-500 hover:bg-emerald-400 text-black py-4 px-8 rounded-2xl font-black text-sm uppercase tracking-widest transition-all transform active:scale-[0.98] disabled:bg-gray-800 disabled:text-gray-500 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)]"
                 >
-                  Sign in
+                  {loading ? 'Please wait...' : 'Sign In'}
                 </button>
-              </div>
-            </form>
+              </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-[var(--color-text-muted)]">
-                Don't have an account?{' '}
-                <Link to="/signup" className="font-medium text-[var(--color-brand)] hover:brightness-110">
-                  Apply to join the network
+              {/* Toggle Sign Up */}
+              <div className="mt-8 text-center">
+                <Link
+                  to="/signup"
+                  className="text-emerald-400 hover:text-emerald-300 font-black text-xs uppercase tracking-[0.2em] transition-all"
+                >
+                  New Partner? Apply to join the network
                 </Link>
-              </p>
-            </div>
-            <div className="mt-8 flex justify-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-text-muted)] opactiy-50">
-              <Link to="/privacy" className="hover:text-[var(--color-brand)] transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-[var(--color-brand)] transition-colors">Terms of Service</Link>
-            </div>
-          </>
-        )}
+              </div>
+
+              {/* Legal Links */}
+              <div className="mt-10 flex justify-center gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-700">
+                <Link to="/privacy" className="hover:text-emerald-400 transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-emerald-400 transition-colors">Terms of Service</Link>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
