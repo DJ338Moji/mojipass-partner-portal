@@ -96,16 +96,12 @@ function App() {
           {/* Public Auth Routes */}
           <Route path="/login" element={
             <AuthRoute>
-              <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <Login />
-              </div>
+              <Login />
             </AuthRoute>
           } />
           <Route path="/signup" element={
             <AuthRoute>
-              <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <Signup />
-              </div>
+              <Signup />
             </AuthRoute>
           } />
           <Route path="/privacy" element={<Privacy />} />
