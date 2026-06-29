@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Logo from '../components/Logo';
+import PasswordInput from '../components/PasswordInput';
 
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { signup } = useAuth();
@@ -16,6 +18,12 @@ export default function Signup() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    if (password !== passwordConfirm) {
+      setError('Passwords do not match. Please try again.');
+      setLoading(false);
+      return;
+    }
 
     try {
       await signup(email, password, name);
@@ -67,18 +75,21 @@ export default function Signup() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-[var(--color-text-muted)]">Password</label>
-            <div className="mt-1">
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none block w-full px-3 py-2 bg-[var(--color-bg)] border border-[var(--card-border)] text-[var(--color-text)] rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--color-brand)] focus:border-[var(--color-brand)] sm:text-sm"
-              />
-            </div>
-          </div>
+          <PasswordInput
+            id="password"
+            name="password"
+            label="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <PasswordInput
+            id="passwordConfirm"
+            name="passwordConfirm"
+            label="Confirm Password"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+          />
 
           <div>
             <button

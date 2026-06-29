@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import PasswordInput from '../components/PasswordInput';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -128,11 +129,14 @@ export default function Login() {
                   />
                 </div>
 
-                <div>
-                  <div className="flex justify-between items-center mb-3">
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">
-                      Password
-                    </label>
+                <PasswordInput
+                  id="password"
+                  name="password"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  variant="dark"
+                  labelAction={
                     <button
                       type="button"
                       onClick={() => setShowReset(true)}
@@ -140,17 +144,8 @@ export default function Login() {
                     >
                       Forgot?
                     </button>
-                  </div>
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-5 py-4 bg-[#0B0B0F] border border-white/10 rounded-2xl text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder:text-gray-700"
-                    placeholder="••••••••"
-                    minLength="6"
-                  />
-                </div>
+                  }
+                />
 
                 <button
                   type="submit"
