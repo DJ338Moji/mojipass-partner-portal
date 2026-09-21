@@ -23,7 +23,7 @@ export default function Privacy() {
 
                 <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-3xl p-8 md:p-12 shadow-xl">
                     <h1 className="text-4xl font-black mb-4 tracking-tighter">Privacy Policy</h1>
-                    <p className="text-[var(--color-text-muted)] mb-12 font-medium">For Network Partners & Creators • Last Updated: March 31, 2026</p>
+                    <p className="text-[var(--color-text-muted)] mb-12 font-medium">For Network Partners & Creators • Last Updated: June 29, 2026</p>
 
                     <section className="space-y-10">
                         <div>
@@ -44,6 +44,17 @@ export default function Privacy() {
                         <div>
                             <h2 className="text-2xl font-bold text-[var(--color-brand)] mb-4">3. Audience Protection</h2>
                             <p className="leading-relaxed opacity-90 text-[var(--color-text-muted)]">Mojipass® does not scrape or store identifiable shopper data from your audience beyond what is required for attribution verification. We never sell your audience insights to third-party advertisers.</p>
+                        </div>
+
+                        <div>
+                            <h2 className="text-2xl font-bold text-[var(--color-brand)] mb-4">4. Data Retention & Deletion</h2>
+                            <p className="mb-4 leading-relaxed opacity-90 text-[var(--color-text-muted)]">We retain partner profile, attribution, and payout data while your account is active. After a verified deletion request, account data is removed within <strong className="text-[var(--color-text)]">90 days</strong>, except payout and tax records we must retain by law. Attribution telemetry linked to shoppers is minimized and deleted per the schedules in our central policy.</p>
+                            <p className="leading-relaxed opacity-90 text-[var(--color-text-muted)]">See the <a href="https://www.mojipass.com/privacy" className="text-[var(--color-brand)] font-bold hover:underline" target="_blank" rel="noopener noreferrer">Mojipass® Privacy Policy</a> for complete retention periods (including Shopify merchant and customer data).</p>
+                        </div>
+
+                        <div>
+                            <h2 className="text-2xl font-bold text-[var(--color-brand)] mb-4">5. Data Processing Agreement</h2>
+                            <p className="leading-relaxed opacity-90 text-[var(--color-text-muted)]">By signing up as a Partner, you agree that Mojipass® processes your account, attribution, and payout data only to operate the partner network, calculate commissions, and prevent fraud. We do not sell your audience insights. Full processor terms, sub-processors, and security measures are in Section 5 of the <a href="https://www.mojipass.com/privacy" className="text-[var(--color-brand)] font-bold hover:underline" target="_blank" rel="noopener noreferrer">central Privacy Policy</a>.</p>
                         </div>
 
                         <div className="pt-12 border-t border-[var(--card-border)]">

@@ -5,6 +5,7 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import CampaignDetails from './pages/CampaignDetails';
+import AcceptInvite from './pages/AcceptInvite';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Logo from './components/Logo';
@@ -104,6 +105,7 @@ function App() {
               <Signup />
             </AuthRoute>
           } />
+          <Route path="/accept-invite" element={<AcceptInvite />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
 

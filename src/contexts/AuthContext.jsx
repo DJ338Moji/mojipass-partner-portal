@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
   signOut
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 const AuthContext = createContext({});
 
@@ -63,6 +63,65 @@ export const AuthProvider = ({ children }) => {
     return userCredential;
   };
 
+  const acceptInviteSignup = async ({ email, password, name, creatorHandle, inviteToken, shippingAddress, dropId }) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const cleanHandle = (creatorHandle || name || '').replace(/^@/, '').trim();
+    const discountCode = `MOJI-${(cleanHandle || 'VIP').replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}`;
+    const referralUrl = `https://renuiq.com?ref=mojipass&creator=${encodeURIComponent(cleanHandle)}`;
+
+    const partnerDoc = {
+      uid: userCredential.user.uid,
+      email,
+      name,
+      creatorHandle: cleanHandle,
+      inviteToken: inviteToken || null,
+      dropId: dropId || null,
+      discountCode,
+      referralUrl,
+      commissionRate: 0.15,
+      discountRate: 0.15,
+      brandPartner: 'RenuIQ Skin Science',
+      brandDomain: 'renuiq.com',
+      shippingAddress: shippingAddress || null,
+      onboardingComplete: true,
+      synergyScore: 100,
+      tier: 'Tier 1 Creator',
+      payoutMethod: 'Stripe/Direct',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    await setDoc(doc(db, 'partners', userCredential.user.uid), partnerDoc);
+    setPartnerData(partnerDoc);
+    return { userCredential, partnerDoc };
+  };
+
+  const acceptInviteExisting = async ({ creatorHandle, inviteToken, shippingAddress, dropId }) => {
+    if (!user) throw new Error("Not logged in");
+    const cleanHandle = (creatorHandle || partnerData?.name || user.email.split('@')[0]).replace(/^@/, '').trim();
+    const discountCode = `MOJI-${(cleanHandle || 'VIP').replace(/[^a-zA-Z0-9]/g, '').toUpperCase()}`;
+    const referralUrl = `https://renuiq.com?ref=mojipass&creator=${encodeURIComponent(cleanHandle)}`;
+
+    const updateData = {
+      creatorHandle: cleanHandle,
+      inviteToken: inviteToken || null,
+      dropId: dropId || null,
+      discountCode,
+      referralUrl,
+      commissionRate: 0.15,
+      discountRate: 0.15,
+      brandPartner: 'RenuIQ Skin Science',
+      brandDomain: 'renuiq.com',
+      onboardingComplete: true,
+      updatedAt: new Date().toISOString()
+    };
+    if (shippingAddress) updateData.shippingAddress = shippingAddress;
+
+    await updateDoc(doc(db, 'partners', user.uid), updateData);
+    setPartnerData(prev => ({ ...(prev || {}), ...updateData }));
+    return { ...partnerData, ...updateData };
+  };
+
   const logout = () => {
     return signOut(auth);
   };
@@ -76,6 +135,8 @@ export const AuthProvider = ({ children }) => {
     partnerData,
     login,
     signup,
+    acceptInviteSignup,
+    acceptInviteExisting,
     logout,
     resetPassword,
     loading
